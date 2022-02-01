@@ -1,0 +1,12 @@
+html, body, div {
+    margin: 2.5px;
+    padding: 0px;
+}
+
+#speedSlider {
+    width: 300px;
+}
+
+#speedSliderLabel {
+    margin-left: 20px;
+}

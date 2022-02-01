@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Conway's Game of Life</title>
+        <link href="style.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+        <div id="canvasHolder"></div>
+
+        <button onclick="gol.clear()">Clear</button>
+        <button onclick="golScene.togglePause()" id="pauseButton">Unpause</button>
+        <button onclick="if (paused) gol.step()">Step</button>
+
+        <label for="speedSlider" id="speedSliderLabel">Speed</label>
+        <input id="speedSlider" type="range" min="5" max="600">
+    </body>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.3.3/pixi.min.js"></script>
+    <script src="wrk.js"></script>
+    <script src="gol.js"></script>
+    <script src="initialGridValue.js"></script>
+    <script src="script.js"></script>
+</html>
