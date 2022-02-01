@@ -93,7 +93,7 @@ class GOL {
     updateCell(colNum, rowNum, crntValue) {
         var newValue = 0;
 
-        var neighborCount = this.countCellNeighbors(colNum, rowNum);
+        var neighborCount = this.getSurroundingCells(colNum, rowNum).reduce((a, b) => a + b);
 
         // If there are not enough neighbors
         if (neighborCount < 2) {
@@ -114,30 +114,28 @@ class GOL {
         return newValue;
     }
 
-    countCellNeighbors(colNum, rowNum) {
-        var count = 0;
-        this.getSurroundingCells(colNum, rowNum).forEach(cell => {
-            if (cell != undefined) {
-                count += cell; // (a filled cell equals 1, an empty cell equals 0)
-            }
-        });
-        return count;
-    }
-
     getSurroundingCells(colNum, rowNum) {
+        // Performance critical so we don't use the proper accessor for getCellAtIndex
+
         var surroundingCells = [];
-        this.surroundingCellPatterns.forEach(pattern => {
-            var col = colNum + pattern[0];
-            var row = rowNum + pattern[1];
+        for (var offset of this.surroundingCellPatterns) {
+            var col = colNum + offset[0];
+            var row = rowNum + offset[1];
             if (this.settings.wrapGrid) {
                 if (row < 0) row = this.rowAmount - 1;
                 if (row >= this.rowAmount) row = 0;
                 if (col < 0) col = this.colAmount - 1;
                 if (col >= this.colAmount) col = 0;
             }
-            var cell = this.getCellAtCoords(col, row);
-            surroundingCells.push(cell);
-        });
+            else {
+                if (col < 0 || row < 0 || col >= this.colAmount || row >= this.rowAmount) {
+                    surroundingCells.push(0);
+                    continue;
+                }
+            }
+            surroundingCells.push(this.getCellAtCoords(col, row));
+        }
+    
         return surroundingCells;
     }
 }
