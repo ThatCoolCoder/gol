@@ -6,7 +6,7 @@ class GOL {
     // this greatly simplifies storing as json, among many other things
 
     settings = {
-        wrapGrid : false
+        wrapGrid : true
     };
     
     constructor(colAmount, rowAmount) {

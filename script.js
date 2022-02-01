@@ -20,6 +20,7 @@ class GolScene extends wrk.GameEngine.Scene {
     speedSlider = wrk.dom.id('speedSlider');
     speedSliderLabel = wrk.dom.id('speedSliderLabel');
     pauseButton = wrk.dom.id('pauseButton');
+    wrapGridToggle = wrk.dom.id('wrapGridToggle');
     
     constructor() {
         super('gol', wrk.v(0, 0), 0);
@@ -95,9 +96,10 @@ class GolScene extends wrk.GameEngine.Scene {
         return this.gol.coordsToIndex(wrk.floor(golCoord.x), wrk.floor(golCoord.y));
     }
 
-    updateSpeed() {
+    updateSettings() {
         this.speed = this.speedSlider.value / 10;
         this.speedSliderLabel.innerText = 'Speed: ' + this.speed.toFixed(1) + ' fps';
+        this.gol.settings.wrapGrid = this.wrapGridToggle.checked;
     }
 
     drawGol(gol) {
@@ -115,7 +117,7 @@ class GolScene extends wrk.GameEngine.Scene {
     update() {
         this.drawGol();
 
-        this.updateSpeed();
+        this.updateSettings();
 
         // If the mouse went down this frame, then draw here
         if (wrk.GameEngine.mouse.pointerDown && ! this.mouseDownLastFrame) {
