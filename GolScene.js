@@ -1,6 +1,6 @@
 class GolScene extends spnr.GameEngine.Scene {
-    speedSlider = spnr.dom.id('speedSlider');
-    speedSliderLabel = spnr.dom.id('speedSliderLabel');
+    fpsSlider = spnr.dom.id('fpsSlider');
+    fpsSliderLabel = spnr.dom.id('fpsSliderLabel');
     pauseButton = spnr.dom.id('pauseButton');
     wrapGridToggle = spnr.dom.id('wrapGridToggle');
     
@@ -13,8 +13,8 @@ class GolScene extends spnr.GameEngine.Scene {
             spnr.v(spnr.GameEngine.canvasSize.x / 2, 50), spnr.PI, {fill : 0xff0000});
         this.addChild(this.pausedText);
 
-        this.frameCount = 0;
         this.paused = true;
+        this.simulationFps = 0;
 
         this.setupEvents();
         this.createSprites();
@@ -83,8 +83,16 @@ class GolScene extends spnr.GameEngine.Scene {
     }
 
     updateSettings() {
-        this.speed = this.speedSlider.value / 10;
-        this.speedSliderLabel.innerText = 'Speed: ' + this.speed.toFixed(1) + ' fps';
+        var newSpeed = this.fpsSlider.value / 10;
+        if (newSpeed != this.simulationFps) {
+            if (this.updateInterval != null) clearInterval(this.updateInterval);
+            this.simulationFps = newSpeed;
+            this.updateInterval = setInterval(() => {
+                if (! this.paused) this.gol.step();
+            }, 1000 / this.simulationFps);
+        }
+        
+        this.fpsSliderLabel.innerText = 'Speed: ' + this.simulationFps.toFixed(1) + ' fps';
         this.gol.settings.wrapGrid = this.wrapGridToggle.checked;
     }
 
@@ -105,9 +113,6 @@ class GolScene extends spnr.GameEngine.Scene {
         
         this.updateSettings();
 
-        if (! this.paused && this.frameCount % (fps / this.speed) < 1) {
-            this.gol.step();
-        }
         this.frameCount ++;
     }
 }
