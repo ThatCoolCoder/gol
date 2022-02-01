@@ -1,10 +1,10 @@
 const viewportSizeTakenX = 0.9;
 const viewportSizeTakenY = 0.85;
 
-var cWidth = wrk.dom.viewportWidth() * viewportSizeTakenX;
-var cHeight = wrk.dom.viewportHeight() * viewportSizeTakenY;
+var cWidth = spnr.dom.viewportWidth() * viewportSizeTakenX;
+var cHeight = spnr.dom.viewportHeight() * viewportSizeTakenY;
 
-wrk.GameEngine.init(wrk.v(cWidth, cHeight), 1, 0x000000);
+spnr.GameEngine.init(spnr.v(cWidth, cHeight), 1, 0x000000);
 
 var fps = 60;
 
@@ -16,22 +16,22 @@ function mousePressed() {
     drawGol(gol);
 }
 
-class GolScene extends wrk.GameEngine.Scene {
-    speedSlider = wrk.dom.id('speedSlider');
-    speedSliderLabel = wrk.dom.id('speedSliderLabel');
-    pauseButton = wrk.dom.id('pauseButton');
-    wrapGridToggle = wrk.dom.id('wrapGridToggle');
+class GolScene extends spnr.GameEngine.Scene {
+    speedSlider = spnr.dom.id('speedSlider');
+    speedSliderLabel = spnr.dom.id('speedSliderLabel');
+    pauseButton = spnr.dom.id('pauseButton');
+    wrapGridToggle = spnr.dom.id('wrapGridToggle');
     
     constructor() {
-        super('gol', wrk.v(0, 0), 0);
+        super('gol', spnr.v(0, 0), 0);
 
         this.gol = new GOL(60, Math.floor(cHeight / (cWidth / 60)));
         for (var i = 0; i < Math.min(initialGridValue.length, this.gol.grid.length); i ++) {
             this.gol.grid[i] = initialGridValue[i];
         }
 
-        this.pausedText = new wrk.GameEngine.Label('paused label', 'The simulation is currently paused.',
-            wrk.v(wrk.GameEngine.canvasSize.x / 2, 50), wrk.PI, {fill : 0xff0000});
+        this.pausedText = new spnr.GameEngine.Label('paused label', 'The simulation is currently paused.',
+            spnr.v(spnr.GameEngine.canvasSize.x / 2, 50), spnr.PI, {fill : 0xff0000});
         this.addChild(this.pausedText);
 
         this.frameCount = 0;
@@ -63,8 +63,8 @@ class GolScene extends wrk.GameEngine.Scene {
         this.sprites = [];
 
         this.gol.grid.forEach((cell, idx) => {
-            var sprite = new wrk.GameEngine.DrawableEntity('this.gol cell #' + idx, wrk.v(0, 0), 0,
-                PIXI.Texture.WHITE, wrk.v(this.cellSize, this.cellSize), wrk.v(1, 1));
+            var sprite = new spnr.GameEngine.DrawableEntity('this.gol cell #' + idx, spnr.v(0, 0), 0,
+                PIXI.Texture.WHITE, spnr.v(this.cellSize, this.cellSize), spnr.v(1, 1));
             this.addChild(sprite);
             this.sprites.push(sprite);
         });
@@ -85,15 +85,15 @@ class GolScene extends wrk.GameEngine.Scene {
 
     calcSpritePos(idx) {
         var [col, row] = this.gol.indexToCoords(idx);
-        var position = wrk.v(0, 0);
+        var position = spnr.v(0, 0);
         position.x = col * this.cellSize;
         position.y = row * this.cellSize;
         return position;
     }
 
     idxFromSpritePos(pos) {
-        var golCoord = wrk.v.copyDiv(pos, this.cellSize);
-        return this.gol.coordsToIndex(wrk.floor(golCoord.x), wrk.floor(golCoord.y));
+        var golCoord = spnr.v.copyDiv(pos, this.cellSize);
+        return this.gol.coordsToIndex(spnr.floor(golCoord.x), spnr.floor(golCoord.y));
     }
 
     updateSettings() {
@@ -120,8 +120,8 @@ class GolScene extends wrk.GameEngine.Scene {
         this.updateSettings();
 
         // If the mouse went down this frame, then draw here
-        if (wrk.GameEngine.mouse.pointerDown && ! this.mouseDownLastFrame) {
-            var index = this.idxFromSpritePos(wrk.GameEngine.mouse.position);
+        if (spnr.GameEngine.mouse.pointerDown && ! this.mouseDownLastFrame) {
+            var index = this.idxFromSpritePos(spnr.GameEngine.mouse.position);
             this.gol.toggleCellAtIndex(index);
         }
 
@@ -129,10 +129,10 @@ class GolScene extends wrk.GameEngine.Scene {
             this.gol.step();
         }
         this.frameCount ++;
-        this.mouseDownLastFrame = wrk.GameEngine.mouse.pointerDown;
+        this.mouseDownLastFrame = spnr.GameEngine.mouse.pointerDown;
     }
 }
 
 var golScene = new GolScene();
 
-wrk.GameEngine.selectScene(golScene);
+spnr.GameEngine.selectScene(golScene);
